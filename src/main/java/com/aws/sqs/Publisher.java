@@ -1,6 +1,7 @@
 package com.aws.sqs;
 
 import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageResult;
 
@@ -28,6 +29,11 @@ public class Publisher {
     private static void sendMessage(String queueUrl){
 
         SendMessageRequest send_msg_request = new SendMessageRequest()
+                .addMessageAttributesEntry(
+                        "attributeTest",
+                        new MessageAttributeValue()
+                                .withDataType("String")
+                                .withStringValue("attributeTest 123"))
                                             .withQueueUrl(queueUrl);
 //                .withDelaySeconds(5);
 
