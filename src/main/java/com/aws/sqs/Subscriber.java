@@ -1,9 +1,11 @@
 package com.aws.sqs;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.Message;
+import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.aws.sqs.SQSFactory.*;
 /**
@@ -23,6 +25,7 @@ public class Subscriber {
         // Enable long polling on a message receipt
         ReceiveMessageRequest receive_request = new ReceiveMessageRequest()
                 .withQueueUrl(queueUrl)
+                .withMessageAttributeNames("attributeTest")
                 .withWaitTimeSeconds(20);
 
         Runnable runnable = () -> {
@@ -70,6 +73,11 @@ public class Subscriber {
         System.out.println("    ReceiptHandle: " + message.getReceiptHandle());
         System.out.println("    MD5OfBody:     " + message.getMD5OfBody());
         System.out.println("    Body:          " + message.getBody());
+        Map<String, MessageAttributeValue> attributes = message.getMessageAttributes();
+        for(Map.Entry<String, MessageAttributeValue> entry :attributes.entrySet()){
+            System.out.println("    key:     " + entry.getKey());
+            System.out.println("    value:     " + entry.getValue().getStringValue());
+        }
     }
 
     private static void deleteMessage(String queueUrl, Message message){
